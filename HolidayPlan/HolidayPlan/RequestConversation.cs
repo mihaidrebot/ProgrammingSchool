@@ -58,7 +58,14 @@ namespace HolidayPlan
             RequestMailer mailer = new RequestMailer();
             MailSettings mailSettings = MailSettings.GetSettings();
             mailer.Setup(mailSettings);
-            mailer.SendEmail(Request);
+            try
+            {
+                mailer.SendEmail(Request);
+            }
+            catch (Exception)
+            {
+                //nothing, settings are not good enough
+            }
         }
     }
 }

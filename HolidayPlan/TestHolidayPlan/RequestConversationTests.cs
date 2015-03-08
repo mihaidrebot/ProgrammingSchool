@@ -6,7 +6,7 @@ using System;
 namespace TestHolidayPlan
 {
     [TestFixture]
-    public class RequestConversationTest
+    public class RequestConversationTests
     {
         private HolidayRequest request;
 

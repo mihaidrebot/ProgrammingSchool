@@ -53,8 +53,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="RequestConversationTest.cs" />
+    <Compile Include="RequestConversationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestMailerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

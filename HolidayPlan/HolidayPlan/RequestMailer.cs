@@ -8,7 +8,7 @@ using System.Net.Mail;
 
 namespace HolidayPlan
 {
-    class RequestMailer
+    internal class RequestMailer
     {
         private SmtpClient smtpClient = new SmtpClient();
         string hrMailAddress;
@@ -57,7 +57,7 @@ namespace HolidayPlan
 
             foreach (MailMessage message in messages)
             {
-                smtpClient.SendAsync(message, new object());
+                smtpClient.Send(message);
             }
         }
 
