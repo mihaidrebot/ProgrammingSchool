@@ -7,7 +7,7 @@ namespace HolidayPlan
 {
     public enum RequestStatus
     {
-        None,
+        New,
         Submited,
         Approved,
         Rejected

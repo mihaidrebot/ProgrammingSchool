@@ -40,8 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HolidayRequest.cs" />
+    <Compile Include="MailSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestConversation.cs" />
+    <Compile Include="RequestMailer.cs" />
     <Compile Include="RequestStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

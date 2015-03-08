@@ -19,32 +19,46 @@ namespace HolidayPlan
         {
             if(Request.Status == RequestStatus.Submited)
             {
-                Throw();
+                ThrowInvalidOpException();
             }
             Request.Status = RequestStatus.Submited;
-        }
+
+            SendEmail();
+        }        
 
         public void Approve()
         {
             if (Request.Status != RequestStatus.Submited)
             {
-                Throw();
+                ThrowInvalidOpException();
             }
             Request.Status = RequestStatus.Approved;
+
+            SendEmail();
         }
 
         public void Reject()
         {
             if (Request.Status != RequestStatus.Submited)
             {
-                Throw();
+                ThrowInvalidOpException();
             }
             Request.Status = RequestStatus.Rejected;
+
+            SendEmail();
         }
 
-        public void Throw()
+        private void ThrowInvalidOpException()
         {
             throw new InvalidOperationException();
+        }
+
+        private void SendEmail()
+        {
+            RequestMailer mailer = new RequestMailer();
+            MailSettings mailSettings = MailSettings.GetSettings();
+            mailer.Setup(mailSettings);
+            mailer.SendEmail(Request);
         }
     }
 }
