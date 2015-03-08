@@ -1,0 +1,5 @@
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\HolidayPlan\obj\Debug\HolidayPlan.csprojResolveAssemblyReference.cache
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\HolidayPlan\bin\Debug\HolidayPlan.dll
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\HolidayPlan\bin\Debug\HolidayPlan.pdb
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\HolidayPlan\obj\Debug\HolidayPlan.dll
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\HolidayPlan\obj\Debug\HolidayPlan.pdb

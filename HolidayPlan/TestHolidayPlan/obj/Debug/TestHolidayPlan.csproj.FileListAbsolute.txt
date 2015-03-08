@@ -1,0 +1,9 @@
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\obj\Debug\TestHolidayPlan.csprojResolveAssemblyReference.cache
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\bin\Debug\TestHolidayPlan.dll
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\bin\Debug\TestHolidayPlan.pdb
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\bin\Debug\nunit.framework.dll
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\bin\Debug\nunit.framework.xml
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\obj\Debug\TestHolidayPlan.dll
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\obj\Debug\TestHolidayPlan.pdb
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\bin\Debug\HolidayPlan.dll
+F:\Work\GitHub\ProgrammingSchool\HolidayPlan\TestHolidayPlan\bin\Debug\HolidayPlan.pdb

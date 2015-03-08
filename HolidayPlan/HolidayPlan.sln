@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayPlan", "HolidayPlan\HolidayPlan.csproj", "{A6107A94-96D0-4F37-8DDC-09B72C226831}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHolidayPlan", "TestHolidayPlan\TestHolidayPlan.csproj", "{4F758093-CD32-4C83-840D-9107DBDFD8C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A6107A94-96D0-4F37-8DDC-09B72C226831}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6107A94-96D0-4F37-8DDC-09B72C226831}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6107A94-96D0-4F37-8DDC-09B72C226831}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F758093-CD32-4C83-840D-9107DBDFD8C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F758093-CD32-4C83-840D-9107DBDFD8C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F758093-CD32-4C83-840D-9107DBDFD8C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F758093-CD32-4C83-840D-9107DBDFD8C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
