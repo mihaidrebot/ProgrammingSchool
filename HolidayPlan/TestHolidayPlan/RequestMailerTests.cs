@@ -13,7 +13,7 @@ namespace TestHolidayPlan
     {
         private RequestMailer mailer;
         private HolidayRequest request;
-        private string dumpDir = "C:\\Temp\\";
+        private string dumpDir = "C:\\Temp\\HolidayMails\\";
 
         [SetUp]
         public void SetUp()
@@ -21,10 +21,16 @@ namespace TestHolidayPlan
             SetupRequest();
             SetUpMailer();
 
-            if (!Directory.Exists(dumpDir))
+            SetupDumpDirectory();
+        }
+
+        private void SetupDumpDirectory()
+        {
+            if (Directory.Exists(dumpDir))
             {
-                Directory.CreateDirectory(dumpDir);
+                Directory.Delete(dumpDir, true);                
             }
+            Directory.CreateDirectory(dumpDir);
         }
 
         private void SetupRequest()
@@ -62,14 +68,16 @@ namespace TestHolidayPlan
         public void Mailer_doesnt_work_without_setup()
         {
             RequestMailer incompleteMailer = new RequestMailer();
-            Assert.Throws<InvalidOperationException>(()=>incompleteMailer.SendEmail(request));
+            RequestConversation newConversation = new RequestConversation(new HolidayRequest(), ConversationStatus.Submited);
+            Assert.Throws<InvalidOperationException>(() => incompleteMailer.SendEmail(newConversation));
         }
 
         [Test]
         public void Mail_is_sent()
         {
-            request.Status = RequestStatus.Approved;
-            mailer.SendEmail(request);
+            var conversation = new RequestConversation(request, ConversationStatus.Submited);
+            mailer.SendEmail(conversation);
+            Assert.AreEqual(1, Directory.GetFiles(dumpDir, "*.eml").Length);
         }
     }
 }

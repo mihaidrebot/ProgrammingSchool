@@ -27,7 +27,7 @@ namespace HolidayPlan
 
         }
 
-        public void SendEmail(HolidayRequest request)
+        public void SendEmail(RequestConversation conversation)
         {
             if(!isSetUp)
             {
@@ -35,18 +35,18 @@ namespace HolidayPlan
             }
             List<MailMessage> messages = new List<MailMessage>();
 
-            switch(request.Status)
+            switch(conversation.Status)
             {
-                case RequestStatus.Submited:
-                    messages.Add(MakeSubmitRequestMessage(request));
+                case ConversationStatus.Submited:
+                    messages.Add(MakeSubmitRequestMessage(conversation.Request));
                     break;
-                case RequestStatus.Approved:
-                    messages.Add(MakeApproveRequestMessageToEmployee(request));
-                    messages.Add(MakeApproveRequestMessageToHr(request));
+                case ConversationStatus.Approved:
+                    messages.Add(MakeApproveRequestMessageToEmployee(conversation.Request));
+                    messages.Add(MakeApproveRequestMessageToHr(conversation.Request));
 
                     break;
-                case RequestStatus.Rejected:
-                    messages.Add(MakeRejectRequestMessage(request));
+                case ConversationStatus.Rejected:
+                    messages.Add(MakeRejectRequestMessage(conversation.Request));
                     break;
                 default:
                     break;

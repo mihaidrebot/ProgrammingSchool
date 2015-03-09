@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HolidayPlan
 {
-    public enum RequestStatus
+    public enum ConversationStatus
     {
         New,
         Submited,

@@ -9,41 +9,48 @@ namespace HolidayPlan
     public class RequestConversation
     {
         public readonly HolidayRequest Request;
+        public ConversationStatus Status { get; private set; }
 
         public RequestConversation(HolidayRequest request)
         {
             Request = request;
+            Status = ConversationStatus.New;
+        }
+
+        public RequestConversation(HolidayRequest request, ConversationStatus status):this(request)
+        {
+            Status = status;
         }
 
         public void Submit()
         {
-            if(Request.Status == RequestStatus.Submited)
+            if(Status == ConversationStatus.Submited)
             {
                 ThrowInvalidOpException();
             }
-            Request.Status = RequestStatus.Submited;
+            Status = ConversationStatus.Submited;
 
             SendEmail();
         }        
 
         public void Approve()
         {
-            if (Request.Status != RequestStatus.Submited)
+            if (Status != ConversationStatus.Submited)
             {
                 ThrowInvalidOpException();
             }
-            Request.Status = RequestStatus.Approved;
+            Status = ConversationStatus.Approved;
 
             SendEmail();
         }
 
         public void Reject()
         {
-            if (Request.Status != RequestStatus.Submited)
+            if (Status != ConversationStatus.Submited)
             {
                 ThrowInvalidOpException();
             }
-            Request.Status = RequestStatus.Rejected;
+            Status = ConversationStatus.Rejected;
 
             SendEmail();
         }
@@ -60,7 +67,7 @@ namespace HolidayPlan
             mailer.Setup(mailSettings);
             try
             {
-                mailer.SendEmail(Request);
+                mailer.SendEmail(this);
             }
             catch (Exception)
             {
