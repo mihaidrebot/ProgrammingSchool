@@ -1,9 +1,6 @@
-﻿using NUnit.Framework;
-using HolidayPlan;
-using System.Net.Mail;
-using System.Net;
+﻿using HolidayPlan;
+using NUnit.Framework;
 using System;
-using System.IO;
 
 
 namespace TestHolidayPlan
