@@ -21,7 +21,7 @@ namespace HolidayPlan
 
         public void Setup(MailSettings mailSettings)
         {
-            hrMailAddress = mailSettings.hrMail;
+            hrMailAddress = mailSettings.HrMail;
             smtpClient = mailSettings.Client;
             isSetUp = true;
 
