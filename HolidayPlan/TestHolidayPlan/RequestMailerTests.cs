@@ -13,26 +13,15 @@ namespace TestHolidayPlan
     {
         private RequestMailer mailer;
         private HolidayRequest request;
-        private string dumpDir = "C:\\Temp\\HolidayMails\\";
+        private MessageCenterMock messageCenter;
 
         [SetUp]
         public void SetUp()
         {
             SetupRequest();
             SetUpMailer();
-
-            SetupDumpDirectory();
         }
-
-        private void SetupDumpDirectory()
-        {
-            if (Directory.Exists(dumpDir))
-            {
-                Directory.Delete(dumpDir, true);                
-            }
-            Directory.CreateDirectory(dumpDir);
-        }
-
+        
         private void SetupRequest()
         {
             request = new HolidayRequest();
@@ -45,17 +34,9 @@ namespace TestHolidayPlan
 
         private void SetUpMailer()
         {
-            var client = new SmtpClient("smtp.gmail.com", 587);
-            client.Credentials = new NetworkCredential("username@gmail.com", "password");
-            client.EnableSsl = false;
-
-            client.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
-            client.PickupDirectoryLocation = dumpDir;//move this to tests!
-
-            MailSettings settings = new MailSettings("hr.evilinc@gmail.com", client);
-
+            messageCenter = new MessageCenterMock { HrMail = "hr.evilinc@gmail.com" };
             mailer = new RequestMailer();
-            mailer.Setup(settings);
+            mailer.Setup(messageCenter);
         }
 
         [TearDown]
@@ -77,7 +58,51 @@ namespace TestHolidayPlan
         {
             var conversation = new RequestConversation(request, ConversationStatus.Submited);
             mailer.SendEmail(conversation);
-            Assert.AreEqual(1, Directory.GetFiles(dumpDir, "*.eml").Length);
+            Assert.AreEqual(1, messageCenter.SentMessages.Count);
+        }
+
+        [Test]
+        public void Not_started_conversation_does_not_send_mail()
+        {
+            var conversation = new RequestConversation(request);
+            Assert.Throws<InvalidOperationException>(()=>mailer.SendEmail(conversation));
+        }        
+
+        [Test]
+        public void Submit_mail_message_is_sent()
+        {
+            var conversation = new RequestConversation(request, ConversationStatus.Submited);
+            mailer.SendEmail(conversation);
+            Assert.AreEqual(1, messageCenter.SentMessages.Count);
+            var message = messageCenter.SentMessages[0];
+            Assert.AreEqual(request.ManagerEmail, message.To[0].Address);
+            Assert.AreEqual(request.EmployeeEmail, message.From.Address);
+        }
+
+        [Test]
+        public void Approve_mail_message_is_sent()
+        {
+            var conversation = new RequestConversation(request, ConversationStatus.Approved);
+            mailer.SendEmail(conversation);
+            Assert.AreEqual(2, messageCenter.SentMessages.Count);
+            var employeeMessage = messageCenter.SentMessages[0];
+            Assert.AreEqual(request.EmployeeEmail, employeeMessage.To[0].Address);
+            Assert.AreEqual(request.ManagerEmail, employeeMessage.From.Address);
+
+            var hrMessage = messageCenter.SentMessages[1];
+            Assert.AreEqual(messageCenter.HrMail, hrMessage.To[0].Address);
+            Assert.AreEqual(request.ManagerEmail, hrMessage.From.Address);
+        }
+
+        [Test]
+        public void Reject_mail_message_is_sent()
+        {
+            var conversation = new RequestConversation(request, ConversationStatus.Rejected);
+            mailer.SendEmail(conversation);
+            Assert.AreEqual(1, messageCenter.SentMessages.Count);
+            var message = messageCenter.SentMessages[0];
+            Assert.AreEqual(request.EmployeeEmail, message.To[0].Address);
+            Assert.AreEqual(request.ManagerEmail, message.From.Address);
         }
     }
 }

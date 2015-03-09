@@ -41,7 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HolidayRequest.cs" />
-    <Compile Include="MailSettings.cs" />
+    <Compile Include="IMessageCenter.cs" />
+    <Compile Include="MessageCenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestConversation.cs" />
     <Compile Include="RequestMailer.cs" />

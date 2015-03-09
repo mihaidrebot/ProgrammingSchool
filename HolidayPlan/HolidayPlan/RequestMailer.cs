@@ -10,32 +10,38 @@ namespace HolidayPlan
 {
     internal class RequestMailer
     {
-        private SmtpClient smtpClient;
-        string hrMailAddress;
         bool isSetUp;
+        IMessageCenter messager;
 
         public RequestMailer()
         {
 
         }
 
-        public void Setup(MailSettings mailSettings)
+        public void Setup(IMessageCenter messageCenter)
         {
-            hrMailAddress = mailSettings.HrMail;
-            smtpClient = mailSettings.Client;
+            this.messager = messageCenter;
             isSetUp = true;
 
         }
 
         public void SendEmail(RequestConversation conversation)
         {
-            if(!isSetUp)
+            if (!isSetUp)
             {
                 throw new InvalidOperationException("The mail settings were not set up!");
             }
+
+            List<MailMessage> messages = PrepareMailMessages(conversation);
+
+            SendMailMessages(messages);
+        }
+
+        private List<MailMessage> PrepareMailMessages(RequestConversation conversation)
+        {
             List<MailMessage> messages = new List<MailMessage>();
 
-            switch(conversation.Status)
+            switch (conversation.Status)
             {
                 case ConversationStatus.Submited:
                     messages.Add(MakeSubmitRequestMessage(conversation.Request));
@@ -49,20 +55,23 @@ namespace HolidayPlan
                     messages.Add(MakeRejectRequestMessage(conversation.Request));
                     break;
                 default:
-                    break;
+                    throw new InvalidOperationException("Cannot prepare message for conversation");
             }
-
+            return messages;
+        }
+        
+        private void SendMailMessages(List<MailMessage> messages)
+        {
             foreach (MailMessage message in messages)
             {
-                smtpClient.Send(message);
+                messager.Send(message);
             }
         }
-
         private MailMessage MakeSubmitRequestMessage(HolidayRequest request)
         {
             MailMessage message = new MailMessage();
             message.From = new MailAddress(request.EmployeeEmail);
-            message.To .Add( request.ManagerEmail);
+            message.To.Add(request.ManagerEmail);
             message.Subject = "Holiday request";
             message.Body = string.Format(@"Hello dear sir/madam,
 Please approve my holiday request starting from {0:} until {1:}.
@@ -93,7 +102,7 @@ Your Manager Extraordinaire", request.From, request.To);
             MailMessage message = new MailMessage();
 
             message.From = new MailAddress(request.ManagerEmail);
-            message.To.Add(hrMailAddress);
+            message.To.Add(messager.HrMail);
 
             message.Subject = "Holiday request approved";
             message.Body = string.Format(@"Hello dear Best Employee,
