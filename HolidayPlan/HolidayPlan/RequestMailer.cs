@@ -10,7 +10,7 @@ namespace HolidayPlan
 {
     internal class RequestMailer
     {
-        private SmtpClient smtpClient = new SmtpClient();
+        private SmtpClient smtpClient;
         string hrMailAddress;
         bool isSetUp;
 
@@ -22,10 +22,7 @@ namespace HolidayPlan
         public void Setup(MailSettings mailSettings)
         {
             hrMailAddress = mailSettings.hrMail;
-            smtpClient.Host = mailSettings.Host;
-            smtpClient.Port = mailSettings.Port;
-            smtpClient.Credentials = mailSettings.Credentials;
-            smtpClient.EnableSsl = mailSettings.EnableSsl;
+            smtpClient = mailSettings.Client;
             isSetUp = true;
 
         }

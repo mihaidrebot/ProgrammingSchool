@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Text;
+using System.Configuration;
 
 namespace HolidayPlan
 {
@@ -14,23 +16,19 @@ namespace HolidayPlan
         public NetworkCredential Credentials { get; private set; }
         public bool EnableSsl { get; private set; }
 
-        private MailSettings()
+        public readonly SmtpClient Client;
+
+        public MailSettings()
         {
+            Client = new SmtpClient();
+            hrMail = ConfigurationManager.AppSettings["hrMail"];
         }
-
-        public static MailSettings GetSettings()
+        
+        public MailSettings(string hrMailAddress,SmtpClient client)
         {
-            return new MailSettings()
-            {
-
-                hrMail = "hr@gmail.com",
-                Host = "smtp.gmail.com",
-                Port = 587,
-                Credentials = new NetworkCredential("username@gmail.com", "password"),
-                EnableSsl = true,
-            };//TODO: read these from settings
+            Client = client;
+            hrMail = hrMailAddress;
         }
-
 
     }
 }

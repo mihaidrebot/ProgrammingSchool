@@ -56,7 +56,7 @@ namespace HolidayPlan
         private void SendEmail()
         {
             RequestMailer mailer = new RequestMailer();
-            MailSettings mailSettings = MailSettings.GetSettings();
+            MailSettings mailSettings = new MailSettings();
             mailer.Setup(mailSettings);
             try
             {
