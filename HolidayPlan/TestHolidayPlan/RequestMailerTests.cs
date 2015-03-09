@@ -11,7 +11,7 @@ namespace TestHolidayPlan
     [TestFixture]
     class RequestMailerTests
     {
-        private RequestMailer mailer;
+        private RequestMessage mailer;
         private HolidayRequest request;
         private MessageCenterMock messageCenter;
 
@@ -35,7 +35,7 @@ namespace TestHolidayPlan
         private void SetUpMailer()
         {
             messageCenter = new MessageCenterMock { HrMail = "hr.evilinc@gmail.com" };
-            mailer = new RequestMailer();
+            mailer = new RequestMessage();
             mailer.Setup(messageCenter);
         }
 
@@ -48,16 +48,16 @@ namespace TestHolidayPlan
         [Test]
         public void Mailer_doesnt_work_without_setup()
         {
-            RequestMailer incompleteMailer = new RequestMailer();
+            RequestMessage incompleteMailer = new RequestMessage();
             RequestConversation newConversation = new RequestConversation(new HolidayRequest(), ConversationStatus.Submited);
-            Assert.Throws<InvalidOperationException>(() => incompleteMailer.SendEmail(newConversation));
+            Assert.Throws<InvalidOperationException>(() => incompleteMailer.Send(newConversation));
         }
 
         [Test]
         public void Mail_is_sent()
         {
             var conversation = new RequestConversation(request, ConversationStatus.Submited);
-            mailer.SendEmail(conversation);
+            mailer.Send(conversation);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
         }
 
@@ -65,14 +65,14 @@ namespace TestHolidayPlan
         public void Not_started_conversation_does_not_send_mail()
         {
             var conversation = new RequestConversation(request);
-            Assert.Throws<InvalidOperationException>(()=>mailer.SendEmail(conversation));
+            Assert.Throws<InvalidOperationException>(()=>mailer.Send(conversation));
         }        
 
         [Test]
         public void Submit_mail_message_is_sent()
         {
             var conversation = new RequestConversation(request, ConversationStatus.Submited);
-            mailer.SendEmail(conversation);
+            mailer.Send(conversation);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
             var message = messageCenter.SentMessages[0];
             Assert.AreEqual(request.ManagerEmail, message.To[0].Address);
@@ -83,7 +83,7 @@ namespace TestHolidayPlan
         public void Approve_mail_message_is_sent()
         {
             var conversation = new RequestConversation(request, ConversationStatus.Approved);
-            mailer.SendEmail(conversation);
+            mailer.Send(conversation);
             Assert.AreEqual(2, messageCenter.SentMessages.Count);
             var employeeMessage = messageCenter.SentMessages[0];
             Assert.AreEqual(request.EmployeeEmail, employeeMessage.To[0].Address);
@@ -98,7 +98,7 @@ namespace TestHolidayPlan
         public void Reject_mail_message_is_sent()
         {
             var conversation = new RequestConversation(request, ConversationStatus.Rejected);
-            mailer.SendEmail(conversation);
+            mailer.Send(conversation);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
             var message = messageCenter.SentMessages[0];
             Assert.AreEqual(request.EmployeeEmail, message.To[0].Address);

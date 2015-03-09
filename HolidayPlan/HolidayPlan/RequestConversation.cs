@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HolidayPlan
 {
@@ -62,12 +58,12 @@ namespace HolidayPlan
 
         private void SendEmail()
         {
-            RequestMailer mailer = new RequestMailer();
+            RequestMessage mailer = new RequestMessage();
             MessageCenter mailSettings = new MessageCenter();
             mailer.Setup(mailSettings);
             try
             {
-                mailer.SendEmail(this);
+                mailer.Send(this);
             }
             catch (Exception)
             {

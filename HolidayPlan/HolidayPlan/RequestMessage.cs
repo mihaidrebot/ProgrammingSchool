@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.Net.Mail;
 
 namespace HolidayPlan
 {
-    internal class RequestMailer
+    internal class RequestMessage
     {
         bool isSetUp;
         IMessageCenter messager;
-
-        public RequestMailer()
-        {
-
-        }
 
         public void Setup(IMessageCenter messageCenter)
         {
@@ -25,7 +16,7 @@ namespace HolidayPlan
 
         }
 
-        public void SendEmail(RequestConversation conversation)
+        public void Send(RequestConversation conversation)
         {
             if (!isSetUp)
             {
@@ -67,6 +58,7 @@ namespace HolidayPlan
                 messager.Send(message);
             }
         }
+        
         private MailMessage MakeSubmitRequestMessage(HolidayRequest request)
         {
             MailMessage message = new MailMessage();
