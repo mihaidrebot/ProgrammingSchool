@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayPlan", "HolidayPlan\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHolidayPlan", "TestHolidayPlan\TestHolidayPlan.csproj", "{4F758093-CD32-4C83-840D-9107DBDFD8C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company", "Company\Company.csproj", "{6457CCC6-83B6-403B-A61B-17CBB03951B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4F758093-CD32-4C83-840D-9107DBDFD8C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F758093-CD32-4C83-840D-9107DBDFD8C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F758093-CD32-4C83-840D-9107DBDFD8C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6457CCC6-83B6-403B-A61B-17CBB03951B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6457CCC6-83B6-403B-A61B-17CBB03951B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6457CCC6-83B6-403B-A61B-17CBB03951B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6457CCC6-83B6-403B-A61B-17CBB03951B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

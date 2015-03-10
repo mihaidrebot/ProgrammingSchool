@@ -8,7 +8,7 @@ namespace TestHolidayPlan
     [TestFixture]
     class RequestMailerTests
     {
-        private RequestMessage mailer;
+        private RequestMessage message;
         private HolidayRequest request;
         private MessageCenterMock messageCenter;
 
@@ -21,10 +21,20 @@ namespace TestHolidayPlan
         
         private void SetupRequest()
         {
+            EmployeeMock employee = new EmployeeMock
+            {
+                Email = "TestUser@TestServer.com",
+                Name = "Angajat Angajel"
+            };
+            EmployeeMock manager = new EmployeeMock
+            {
+                Email = "TestManager@TestServer.com",
+                Name = "Manager Managerescu"
+            };
+
             request = new HolidayRequest();
-            request.EmployeeEmail = "TestUser@TestServer.com";
-            request.EmployeeName = "TestUser";
-            request.ManagerEmail = "TestManager@TestServer.com";
+            request.Employee = employee;
+            request.Manager = manager;
             request.From = DateTime.Now;
             request.To = DateTime.Now.AddDays(10);
         }
@@ -32,8 +42,8 @@ namespace TestHolidayPlan
         private void SetUpMailer()
         {
             messageCenter = new MessageCenterMock { HrMail = "hr.evilinc@gmail.com" };
-            mailer = new RequestMessage();
-            mailer.Setup(messageCenter);
+            message = new RequestMessage();
+            message.Setup(messageCenter);
         }
 
         [TearDown]
@@ -46,64 +56,54 @@ namespace TestHolidayPlan
         public void Mailer_doesnt_work_without_setup()
         {
             RequestMessage incompleteMailer = new RequestMessage();
-            RequestConversation newConversation = new RequestConversation(new HolidayRequest{ Status = RequestStatus.Submited});
-            Assert.Throws<InvalidOperationException>(() => incompleteMailer.Send(newConversation));
+            Assert.Throws<InvalidOperationException>(() => incompleteMailer.Send(new HolidayRequest(), RequestStatus.Submited));
         }
 
         [Test]
         public void Mail_is_sent()
         {
-            request.Status = RequestStatus.Submited;
-            var conversation = new RequestConversation(request);
-            mailer.Send(conversation);
+            message.Send(request,RequestStatus.Submited);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
         }
 
         [Test]
         public void Not_started_conversation_does_not_send_mail()
         {
-            var conversation = new RequestConversation(request);
-            Assert.Throws<InvalidOperationException>(()=>mailer.Send(conversation));
+            Assert.Throws<InvalidOperationException>(()=>message.Send(request,RequestStatus.New));
         }        
 
         [Test]
         public void Submit_mail_message_is_sent()
         {
-            request.Status = RequestStatus.Submited;
-            var conversation = new RequestConversation(request);
-            mailer.Send(conversation);
+            message.Send(request, RequestStatus.Submited);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
-            var message = messageCenter.SentMessages[0];
-            Assert.AreEqual(request.ManagerEmail, message.To[0].Address);
-            Assert.AreEqual(request.EmployeeEmail, message.From.Address);
+            var sentMsg = messageCenter.SentMessages[0];
+            Assert.AreEqual(request.Manager.Email, sentMsg.To[0].Address);
+            Assert.AreEqual(request.Employee.Email, sentMsg.From.Address);
         }
 
         [Test]
         public void Approve_mail_message_is_sent()
         {
-            request.Status = RequestStatus.Approved;
-            var conversation = new RequestConversation(request);
-            mailer.Send(conversation);
+            message.Send(request, RequestStatus.Approved);
             Assert.AreEqual(2, messageCenter.SentMessages.Count);
             var employeeMessage = messageCenter.SentMessages[0];
-            Assert.AreEqual(request.EmployeeEmail, employeeMessage.To[0].Address);
-            Assert.AreEqual(request.ManagerEmail, employeeMessage.From.Address);
+            Assert.AreEqual(request.Employee.Email, employeeMessage.To[0].Address);
+            Assert.AreEqual(request.Manager.Email, employeeMessage.From.Address);
 
             var hrMessage = messageCenter.SentMessages[1];
             Assert.AreEqual(messageCenter.HrMail, hrMessage.To[0].Address);
-            Assert.AreEqual(request.ManagerEmail, hrMessage.From.Address);
+            Assert.AreEqual(request.Manager.Email, hrMessage.From.Address);
         }
 
         [Test]
         public void Reject_mail_message_is_sent()
-        {
-            request.Status = RequestStatus.Rejected;
-            var conversation = new RequestConversation(request);
-            mailer.Send(conversation);
+        {            
+            message.Send(request, RequestStatus.Rejected);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
-            var message = messageCenter.SentMessages[0];
-            Assert.AreEqual(request.EmployeeEmail, message.To[0].Address);
-            Assert.AreEqual(request.ManagerEmail, message.From.Address);
+            var sentMsg = messageCenter.SentMessages[0];
+            Assert.AreEqual(request.Employee.Email, sentMsg.To[0].Address);
+            Assert.AreEqual(request.Manager.Email, sentMsg.From.Address);
         }
     }
 }

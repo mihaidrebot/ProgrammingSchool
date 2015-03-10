@@ -5,22 +5,29 @@ namespace HolidayPlan
     public class RequestConversation
     {
         public readonly HolidayRequest Request;
-        
+        private IMessageCenter messageCenter;
+        private RequestMessage message;
 
         public RequestConversation(HolidayRequest request)
         {
             Request = request;
+            message = new RequestMessage();
         }
-        
+
+        public void SetMessageCenter(IMessageCenter messageCenter)
+        {
+            this.messageCenter = messageCenter;
+            message = new RequestMessage();
+            message.Setup(messageCenter);
+        }
         public void Submit()
         {
             if (Request.Status == RequestStatus.Submited)
             {
                 throw new InvalidTranzitionException(new Tranzition(Request.Status, RequestStatus.Submited));
             }
-            Request.Status = RequestStatus.Submited;
-
-            SendEmail();
+            
+            SendEmail(RequestStatus.Submited);
         }        
 
         public void Approve()
@@ -29,9 +36,8 @@ namespace HolidayPlan
             {
                 throw new InvalidTranzitionException(new Tranzition(Request.Status, RequestStatus.Approved));
             }
-            Request.Status = RequestStatus.Approved;
 
-            SendEmail();
+            SendEmail(RequestStatus.Approved);
         }
 
         public void Reject()
@@ -40,24 +46,21 @@ namespace HolidayPlan
             {
                 throw new InvalidTranzitionException(new Tranzition(Request.Status, RequestStatus.Rejected));
             }
-            Request.Status = RequestStatus.Rejected;
 
-            SendEmail();
+            SendEmail(RequestStatus.Rejected);
         }
 
-        private void SendEmail()
+        private void SendEmail(RequestStatus status)
         {
-            RequestMessage mailer = new RequestMessage();
-            MessageCenter mailSettings = new MessageCenter();
-            mailer.Setup(mailSettings);
             try
             {
-                mailer.Send(this);
+                message.Send(Request, status);
+                Request.Status = status;
             }
-            catch (Exception)
+            catch (InvalidOperationException ex)
             {
-                //nothing, settings are not good enough
-            }
+                throw new InvalidOperationException("The message center was not set up.", ex);
+            }            
         }
     }
 }

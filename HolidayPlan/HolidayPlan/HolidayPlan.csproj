@@ -31,7 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,9 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HolidayRequest.cs" />
+    <Compile Include="IEmployee.cs" />
     <Compile Include="IMessageCenter.cs" />
     <Compile Include="InvalidTranzitionException.cs" />
-    <Compile Include="MessageCenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestConversation.cs" />
     <Compile Include="RequestMessage.cs" />

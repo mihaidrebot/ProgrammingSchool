@@ -9,6 +9,7 @@ namespace HolidayPlan
         bool isSetUp;
         IMessageCenter messager;
 
+
         public void Setup(IMessageCenter messageCenter)
         {
             this.messager = messageCenter;
@@ -16,34 +17,37 @@ namespace HolidayPlan
 
         }
 
-        public void Send(RequestConversation conversation)
+        private HolidayRequest Request;
+        public void Send(HolidayRequest request, RequestStatus status)
         {
             if (!isSetUp)
             {
                 throw new InvalidOperationException("The mail settings were not set up!");
             }
 
-            List<MailMessage> messages = PrepareMailMessages(conversation);
+            this.Request = request;
+
+            List<MailMessage> messages = PrepareMailMessages(status);
 
             SendMailMessages(messages);
         }
 
-        private List<MailMessage> PrepareMailMessages(RequestConversation conversation)
+        private List<MailMessage> PrepareMailMessages(RequestStatus status)
         {
             List<MailMessage> messages = new List<MailMessage>();
 
-            switch (conversation.Request.Status)
+            switch (status)
             {
                 case RequestStatus.Submited:
-                    messages.Add(MakeSubmitRequestMessage(conversation.Request));
+                    messages.Add(MakeSubmitRequestMessage(Request));
                     break;
                 case RequestStatus.Approved:
-                    messages.Add(MakeApproveRequestMessageToEmployee(conversation.Request));
-                    messages.Add(MakeApproveRequestMessageToHr(conversation.Request));
+                    messages.Add(MakeApproveRequestMessageToEmployee(Request));
+                    messages.Add(MakeApproveRequestMessageToHr(Request));
 
                     break;
                 case RequestStatus.Rejected:
-                    messages.Add(MakeRejectRequestMessage(conversation.Request));
+                    messages.Add(MakeRejectRequestMessage(Request));
                     break;
                 default:
                     throw new InvalidOperationException("Cannot prepare message for conversation");
@@ -62,8 +66,8 @@ namespace HolidayPlan
         private MailMessage MakeSubmitRequestMessage(HolidayRequest request)
         {
             MailMessage message = new MailMessage();
-            message.From = new MailAddress(request.EmployeeEmail);
-            message.To.Add(request.ManagerEmail);
+            message.From = new MailAddress(request.Employee.Email);
+            message.To.Add(request.Manager.Email);
             message.Subject = "Holiday request";
             message.Body = string.Format(@"Hello dear sir/madam,
 Please approve my holiday request starting from {0:} until {1:}.
@@ -77,8 +81,8 @@ Your Best Employee", request.From, request.To);
         {
             MailMessage message = new MailMessage();
 
-            message.From = new MailAddress(request.ManagerEmail);
-            message.To.Add(request.EmployeeEmail);
+            message.From = new MailAddress(request.Manager.Email);
+            message.To.Add(request.Employee.Email);
 
             message.Subject = "Re: Holiday request";
             message.Body = string.Format(@"Hello dear Best Employee,
@@ -93,7 +97,7 @@ Your Manager Extraordinaire", request.From, request.To);
         {
             MailMessage message = new MailMessage();
 
-            message.From = new MailAddress(request.ManagerEmail);
+            message.From = new MailAddress(request.Manager.Email);
             message.To.Add(messager.HrMail);
 
             message.Subject = "Holiday request approved";
@@ -110,8 +114,8 @@ Your Manager Extraordinaire", request.From, request.To);
         private MailMessage MakeRejectRequestMessage(HolidayRequest request)
         {
             MailMessage message = new MailMessage();
-            message.From = new MailAddress(request.ManagerEmail);
-            message.To.Add(request.EmployeeEmail);
+            message.From = new MailAddress(request.Manager.Email);
+            message.To.Add(request.Employee.Email);
             message.Subject = "Re: Holiday request";
             message.Body = string.Format(@"Hello my minion,
 

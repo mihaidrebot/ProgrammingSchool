@@ -1,14 +1,15 @@
-﻿using System.Configuration;
+﻿using HolidayPlan;
+using System.Configuration;
 using System.Net.Mail;
 
-namespace HolidayPlan
+namespace Company
 {
-    class MessageCenter : IMessageCenter
+    class EmailMessageCenter : IMessageCenter
     {
         public string HrMail { get; private set; }        
         private readonly SmtpClient client;
 
-        public MessageCenter()
+        public EmailMessageCenter()
         {
             client = new SmtpClient();
             HrMail = ConfigurationManager.AppSettings["hrMail"];

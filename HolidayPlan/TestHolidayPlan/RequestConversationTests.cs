@@ -8,17 +8,31 @@ namespace TestHolidayPlan
     public class RequestConversationTests
     {
         private HolidayRequest request;
+        private MessageCenterMock messageCenter;
 
         [SetUp]
         public void SetUp()
         {
+            EmployeeMock employee = new EmployeeMock
+            {
+                Email = "TestUser@TestServer.com",
+                Name = "Angajat Angajel"
+            };
+            EmployeeMock manager = new EmployeeMock
+            {
+                Email = "TestManager@TestServer.com",
+                Name = "Manager Managerescu"
+            };
+
             request = new HolidayRequest();
-            request.EmployeeEmail = "TestUser@TestServer.com";
-            request.EmployeeName = "TestUser";
-            request.ManagerEmail = "TestManager@TestServer.com";
+            request.Employee = employee;
+            request.Manager = manager;
             request.From = DateTime.Now;
             request.To = DateTime.Now.AddDays(10);
             request.Status = RequestStatus.New;
+
+
+            messageCenter = new MessageCenterMock();
         }
 
         [TearDown]
@@ -28,18 +42,32 @@ namespace TestHolidayPlan
         }
 
         [Test]
+        public void Conversation_needs_message_center()
+        {
+            RequestConversation conversation = new RequestConversation(request);            
+            Assert.Throws<InvalidOperationException>(conversation.Submit);
+        }
+
+        [Test]
         public void Request_is_submited()
         {
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             conversation.Submit();
             Assert.AreEqual(RequestStatus.Submited, conversation.Request.Status);
+        }
+
+        private RequestConversation MakeConversation()
+        {
+            RequestConversation conversation = new RequestConversation(request);
+            conversation.SetMessageCenter(messageCenter);
+            return conversation;
         }
 
         [Test]
         public void Request_is_approved()
         {
             request.Status = RequestStatus.Submited;
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             conversation.Approve();
             Assert.AreEqual(RequestStatus.Approved, conversation.Request.Status);
         }
@@ -48,7 +76,7 @@ namespace TestHolidayPlan
         public void Request_is_rejected()
         {
             request.Status = RequestStatus.Submited;
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             conversation.Reject();
             Assert.AreEqual(RequestStatus.Rejected, conversation.Request.Status);
         }
@@ -56,7 +84,7 @@ namespace TestHolidayPlan
         [Test]
         public void Request_cannot_submit_twice()
         {
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             conversation.Submit();
             Assert.Throws<InvalidTranzitionException>(conversation.Submit);
         }
@@ -64,14 +92,14 @@ namespace TestHolidayPlan
         [Test]
         public void Unsubmited_request_cannot_be_approved()
         {
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             Assert.Throws<InvalidTranzitionException>(conversation.Approve);
         }
 
         [Test]
         public void Unsubmited_request_cannot_be_rejected()
         {
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             Assert.Throws<InvalidTranzitionException>(conversation.Reject);
         }
 
@@ -79,7 +107,7 @@ namespace TestHolidayPlan
         public void Approved_request_cannot_be_approved()
         {
             request.Status = RequestStatus.Approved;
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             Assert.Throws<InvalidTranzitionException>(conversation.Approve);
         }
 
@@ -87,7 +115,7 @@ namespace TestHolidayPlan
         public void Rejected_request_cannot_be_approved()
         {
             request.Status = RequestStatus.Rejected;
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             Assert.Throws<InvalidTranzitionException>(conversation.Approve);
         }
 
@@ -95,7 +123,7 @@ namespace TestHolidayPlan
         public void Approved_request_cannot_be_rejected()
         {
             request.Status = RequestStatus.Approved;
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             Assert.Throws<InvalidTranzitionException>(conversation.Reject);
         }
 
@@ -103,7 +131,7 @@ namespace TestHolidayPlan
         public void Rejected_request_cannot_be_rejected()
         {
             request.Status = RequestStatus.Rejected;
-            RequestConversation conversation = new RequestConversation(request);
+            RequestConversation conversation = MakeConversation();
             Assert.Throws<InvalidTranzitionException>(conversation.Reject);
         }
     }

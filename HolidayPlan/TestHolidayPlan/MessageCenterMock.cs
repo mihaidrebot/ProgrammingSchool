@@ -10,6 +10,11 @@ namespace TestHolidayPlan
 
         public List<MailMessage> SentMessages = new List<MailMessage>();
 
+        public MessageCenterMock()
+        {
+            HrMail = "hr@TestServer.com";
+        }
+
         public void Send(MailMessage message)
         {
             SentMessages.Add(message);

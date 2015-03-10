@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EmployeeMock.cs" />
     <Compile Include="MessageCenterMock.cs" />
     <Compile Include="RequestConversationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

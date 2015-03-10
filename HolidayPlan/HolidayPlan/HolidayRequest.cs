@@ -4,9 +4,8 @@ namespace HolidayPlan
 {
     public class HolidayRequest
     {
-        public string EmployeeName;
-        public string EmployeeEmail;
-        public string ManagerEmail;
+        public IEmployee Employee { get; set; }
+        public IEmployee Manager { get; set; }
 
         // holiday period
         public DateTime From;
