@@ -32,17 +32,17 @@ namespace HolidayPlan
         {
             List<MailMessage> messages = new List<MailMessage>();
 
-            switch (conversation.Status)
+            switch (conversation.Request.Status)
             {
-                case ConversationStatus.Submited:
+                case RequestStatus.Submited:
                     messages.Add(MakeSubmitRequestMessage(conversation.Request));
                     break;
-                case ConversationStatus.Approved:
+                case RequestStatus.Approved:
                     messages.Add(MakeApproveRequestMessageToEmployee(conversation.Request));
                     messages.Add(MakeApproveRequestMessageToHr(conversation.Request));
 
                     break;
-                case ConversationStatus.Rejected:
+                case RequestStatus.Rejected:
                     messages.Add(MakeRejectRequestMessage(conversation.Request));
                     break;
                 default:

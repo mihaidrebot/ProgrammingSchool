@@ -46,14 +46,15 @@ namespace TestHolidayPlan
         public void Mailer_doesnt_work_without_setup()
         {
             RequestMessage incompleteMailer = new RequestMessage();
-            RequestConversation newConversation = new RequestConversation(new HolidayRequest(), ConversationStatus.Submited);
+            RequestConversation newConversation = new RequestConversation(new HolidayRequest{ Status = RequestStatus.Submited});
             Assert.Throws<InvalidOperationException>(() => incompleteMailer.Send(newConversation));
         }
 
         [Test]
         public void Mail_is_sent()
         {
-            var conversation = new RequestConversation(request, ConversationStatus.Submited);
+            request.Status = RequestStatus.Submited;
+            var conversation = new RequestConversation(request);
             mailer.Send(conversation);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
         }
@@ -68,7 +69,8 @@ namespace TestHolidayPlan
         [Test]
         public void Submit_mail_message_is_sent()
         {
-            var conversation = new RequestConversation(request, ConversationStatus.Submited);
+            request.Status = RequestStatus.Submited;
+            var conversation = new RequestConversation(request);
             mailer.Send(conversation);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
             var message = messageCenter.SentMessages[0];
@@ -79,7 +81,8 @@ namespace TestHolidayPlan
         [Test]
         public void Approve_mail_message_is_sent()
         {
-            var conversation = new RequestConversation(request, ConversationStatus.Approved);
+            request.Status = RequestStatus.Approved;
+            var conversation = new RequestConversation(request);
             mailer.Send(conversation);
             Assert.AreEqual(2, messageCenter.SentMessages.Count);
             var employeeMessage = messageCenter.SentMessages[0];
@@ -94,7 +97,8 @@ namespace TestHolidayPlan
         [Test]
         public void Reject_mail_message_is_sent()
         {
-            var conversation = new RequestConversation(request, ConversationStatus.Rejected);
+            request.Status = RequestStatus.Rejected;
+            var conversation = new RequestConversation(request);
             mailer.Send(conversation);
             Assert.AreEqual(1, messageCenter.SentMessages.Count);
             var message = messageCenter.SentMessages[0];

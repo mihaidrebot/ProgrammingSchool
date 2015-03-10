@@ -11,5 +11,7 @@ namespace HolidayPlan
         // holiday period
         public DateTime From;
         public DateTime To;
+
+        public RequestStatus Status;
     }
 }

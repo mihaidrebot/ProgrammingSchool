@@ -18,6 +18,7 @@ namespace TestHolidayPlan
             request.ManagerEmail = "TestManager@TestServer.com";
             request.From = DateTime.Now;
             request.To = DateTime.Now.AddDays(10);
+            request.Status = RequestStatus.New;
         }
 
         [TearDown]
@@ -31,23 +32,25 @@ namespace TestHolidayPlan
         {
             RequestConversation conversation = new RequestConversation(request);
             conversation.Submit();
-            Assert.AreEqual(ConversationStatus.Submited, conversation.Status);
+            Assert.AreEqual(RequestStatus.Submited, conversation.Request.Status);
         }
 
         [Test]
         public void Request_is_approved()
         {
-            RequestConversation conversation = new RequestConversation(request, ConversationStatus.Submited);
+            request.Status = RequestStatus.Submited;
+            RequestConversation conversation = new RequestConversation(request);
             conversation.Approve();
-            Assert.AreEqual(ConversationStatus.Approved, conversation.Status);
+            Assert.AreEqual(RequestStatus.Approved, conversation.Request.Status);
         }
 
         [Test]
         public void Request_is_rejected()
         {
-            RequestConversation conversation = new RequestConversation(request, ConversationStatus.Submited);
+            request.Status = RequestStatus.Submited;
+            RequestConversation conversation = new RequestConversation(request);
             conversation.Reject();
-            Assert.AreEqual(ConversationStatus.Rejected, conversation.Status);
+            Assert.AreEqual(RequestStatus.Rejected, conversation.Request.Status);
         }
 
         [Test]
@@ -55,49 +58,53 @@ namespace TestHolidayPlan
         {
             RequestConversation conversation = new RequestConversation(request);
             conversation.Submit();
-            Assert.Throws<InvalidOperationException>(conversation.Submit);
+            Assert.Throws<InvalidTranzitionException>(conversation.Submit);
         }
 
         [Test]
         public void Unsubmited_request_cannot_be_approved()
         {
             RequestConversation conversation = new RequestConversation(request);
-            Assert.Throws<InvalidOperationException>(conversation.Approve);
+            Assert.Throws<InvalidTranzitionException>(conversation.Approve);
         }
 
         [Test]
         public void Unsubmited_request_cannot_be_rejected()
         {
             RequestConversation conversation = new RequestConversation(request);
-            Assert.Throws<InvalidOperationException>(conversation.Reject);
+            Assert.Throws<InvalidTranzitionException>(conversation.Reject);
         }
 
         [Test]
         public void Approved_request_cannot_be_approved()
         {
-            RequestConversation conversation = new RequestConversation(request, ConversationStatus.Approved);
-            Assert.Throws<InvalidOperationException>(conversation.Approve);
+            request.Status = RequestStatus.Approved;
+            RequestConversation conversation = new RequestConversation(request);
+            Assert.Throws<InvalidTranzitionException>(conversation.Approve);
         }
 
         [Test]
         public void Rejected_request_cannot_be_approved()
         {
-            RequestConversation conversation = new RequestConversation(request,ConversationStatus.Rejected);
-            Assert.Throws<InvalidOperationException>(conversation.Approve);
+            request.Status = RequestStatus.Rejected;
+            RequestConversation conversation = new RequestConversation(request);
+            Assert.Throws<InvalidTranzitionException>(conversation.Approve);
         }
 
         [Test]
         public void Approved_request_cannot_be_rejected()
         {
-            RequestConversation conversation = new RequestConversation(request, ConversationStatus.Approved);
-            Assert.Throws<InvalidOperationException>(conversation.Reject);
+            request.Status = RequestStatus.Approved;
+            RequestConversation conversation = new RequestConversation(request);
+            Assert.Throws<InvalidTranzitionException>(conversation.Reject);
         }
 
         [Test]
         public void Rejected_request_cannot_be_rejected()
         {
-            RequestConversation conversation = new RequestConversation(request, ConversationStatus.Rejected);
-            Assert.Throws<InvalidOperationException>(conversation.Reject);
+            request.Status = RequestStatus.Rejected;
+            RequestConversation conversation = new RequestConversation(request);
+            Assert.Throws<InvalidTranzitionException>(conversation.Reject);
         }
     }
 }

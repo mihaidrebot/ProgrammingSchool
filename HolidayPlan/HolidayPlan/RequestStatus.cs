@@ -1,7 +1,7 @@
 ﻿
 namespace HolidayPlan
 {
-    public enum ConversationStatus
+    public enum RequestStatus
     {
         New,
         Submited,

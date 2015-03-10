@@ -5,55 +5,44 @@ namespace HolidayPlan
     public class RequestConversation
     {
         public readonly HolidayRequest Request;
-        public ConversationStatus Status { get; private set; }
+        
 
         public RequestConversation(HolidayRequest request)
         {
             Request = request;
-            Status = ConversationStatus.New;
         }
-
-        public RequestConversation(HolidayRequest request, ConversationStatus status):this(request)
-        {
-            Status = status;
-        }
-
+        
         public void Submit()
         {
-            if(Status == ConversationStatus.Submited)
+            if (Request.Status == RequestStatus.Submited)
             {
-                ThrowInvalidOpException();
+                throw new InvalidTranzitionException(new Tranzition(Request.Status, RequestStatus.Submited));
             }
-            Status = ConversationStatus.Submited;
+            Request.Status = RequestStatus.Submited;
 
             SendEmail();
         }        
 
         public void Approve()
         {
-            if (Status != ConversationStatus.Submited)
+            if (Request.Status != RequestStatus.Submited)
             {
-                ThrowInvalidOpException();
+                throw new InvalidTranzitionException(new Tranzition(Request.Status, RequestStatus.Approved));
             }
-            Status = ConversationStatus.Approved;
+            Request.Status = RequestStatus.Approved;
 
             SendEmail();
         }
 
         public void Reject()
         {
-            if (Status != ConversationStatus.Submited)
+            if (Request.Status != RequestStatus.Submited)
             {
-                ThrowInvalidOpException();
+                throw new InvalidTranzitionException(new Tranzition(Request.Status, RequestStatus.Rejected));
             }
-            Status = ConversationStatus.Rejected;
+            Request.Status = RequestStatus.Rejected;
 
             SendEmail();
-        }
-
-        private void ThrowInvalidOpException()
-        {
-            throw new InvalidOperationException();
         }
 
         private void SendEmail()
